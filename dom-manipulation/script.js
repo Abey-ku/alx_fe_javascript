@@ -144,8 +144,8 @@ async function syncWithServer(newQuote) {
   }
 }
 
-// Function to fetch updates from the server
-async function fetchUpdates() {
+// Function to fetch quotes from server
+async function fetchQuotesFromServer() {
   try {
     const response = await fetch(SERVER_URL);
     if (response.ok) {
@@ -153,7 +153,7 @@ async function fetchUpdates() {
       mergeQuotes(serverQuotes);
     }
   } catch (error) {
-    console.error('Error fetching updates from server:', error);
+    console.error('Error fetching quotes from server:', error);
   }
 }
 
@@ -170,11 +170,15 @@ function mergeQuotes(serverQuotes) {
   showRandomQuote();
 }
 
+// Function to periodically check for new quotes from the server
+function syncQuotes() {
+  setInterval(fetchQuotesFromServer, 5000); // Fetch updates from server every 5 seconds
+}
+
 // Initial setup function
 function init() {
   loadQuotes();
   populateCategories();
-  createAddQuoteForm();
   document.getElementById('newQuote').addEventListener('click', showRandomQuote);
   document.getElementById('exportQuotes').addEventListener('click', exportQuotes);
 
@@ -187,7 +191,7 @@ function init() {
     showRandomQuote();
   }
 
-  setInterval(fetchUpdates, 5000); // Fetch updates from server every 5 seconds
+  syncQuotes();
 }
 
 // Call the initial setup function when the DOM content is loaded
