@@ -138,9 +138,11 @@ async function syncWithServer(newQuote) {
     if (response.ok) {
       const data = await response.json();
       console.log('Quote synced with server:', data);
+      showNotification('Quote synced with server!');
     }
   } catch (error) {
     console.error('Error syncing with server:', error);
+    showNotification('Error syncing with server. Please try again later.');
   }
 }
 
@@ -151,9 +153,11 @@ async function fetchQuotesFromServer() {
     if (response.ok) {
       const serverQuotes = await response.json();
       mergeQuotes(serverQuotes);
+      showNotification('Quotes synced with server!');
     }
   } catch (error) {
     console.error('Error fetching quotes from server:', error);
+    showNotification('Error fetching quotes from server. Please try again later.');
   }
 }
 
@@ -173,6 +177,17 @@ function mergeQuotes(serverQuotes) {
 // Function to periodically check for new quotes from the server
 function syncQuotes() {
   setInterval(fetchQuotesFromServer, 5000); // Fetch updates from server every 5 seconds
+}
+
+// Function to show notification
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
 }
 
 // Initial setup function
